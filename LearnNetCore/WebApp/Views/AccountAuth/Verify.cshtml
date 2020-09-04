@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewData["Title"] = "Verify";
+    Layout = "~/Views/Login/Login.cshtml";
+}
+
+<h1>Verify</h1>
+<form id="formLogin" role="form">
+    <div class="textbox">
+        <i class="fas fa-lock"></i>
+        <input type="email" id="email" placeholder="Email">
+    </div>
+    <div class="textbox">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="verifyId" placeholder="Verification Code">
+    </div>
+    <input type="button" class="btn" typeof="submit" onclick="Verify()" value="Sign in">
+    <div class="col-md-12">
+        <input type="checkbox" onclick="myFunction()">Show Verify Code
+    </div>
+</form>
+<p></p>
+
+<p class="mb-0">
+    <a href="/login" class="text-center"> Have an account? Login here.</a>
+</p>
+
+
+
+@section scriptLogin{
+    <script src="~/js/Login.js"></script>
+    <script>
+        function myFunction() {
+            var x = document.getElementById("verifyId");
+            if (x.type === "password") {
+                x.type = "text";
+            } else {
+                x.type = "password";
+            }
+
+        }
+
+    </script>
+}
+
