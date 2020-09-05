@@ -15,4 +15,3 @@ C:\Users\User\source\repos\LearnNetCore\LearnNetCore\obj\Debug\netcoreapp2.1\Lea
 C:\Users\User\source\repos\LearnNetCore\LearnNetCore\obj\Debug\netcoreapp2.1\LearnNetCore.dll
 C:\Users\User\source\repos\LearnNetCore\LearnNetCore\obj\Debug\netcoreapp2.1\LearnNetCore.pdb
 C:\Users\User\source\repos\LearnNetCore\LearnNetCore\obj\Debug\netcoreapp2.1\LearnNetCore.genruntimeconfig.cache
-C:\Users\User\source\repos\LearnNetCore\LearnNetCore\obj\Debug\netcoreapp2.1\LearnNetCore.csprojAssemblyReference.cache

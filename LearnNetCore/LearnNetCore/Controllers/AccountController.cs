@@ -69,28 +69,40 @@ namespace LearnNetCore.Controllers
             return BadRequest(500);
         }
         [HttpPost]
-        [Route("verify")]
-        public IActionResult VerifyCode(UserViewModel userVM)
+        [Route("verify/{id}")]
+        public async Task<IActionResult> VerifyCode(string id, string verCode)
         {
             if (ModelState.IsValid)
             {
-                var getUserRole = _context.UserRoles.Include("User").Include("Role").SingleOrDefault(x => x.User.Email == userVM.Email);
-                if (getUserRole == null)
+                var getCode = _context.Users.Where(U => U.SecurityStamp == verCode).Any();
+                if (!getCode)
                 {
-                    return NotFound( new { msg = "Please using the existing email or sign up first" });
+                    return BadRequest(new { msg = "Verification proccess is failed. Please enter the invalid code" });
                 }
-                else if (userVM.VerificationCode != getUserRole.User.SecurityStamp)
-                {
-                    return BadRequest(new { msg = "Incorrect code. Please try again" });
-                }
-                else
-                {
-                    var user = new UserViewModel();
-                    user.Id = getUserRole.User.Id;
-                    user.Username = getUserRole.User.UserName;
-                    user.RoleName = getUserRole.Role.Name;
-                    return StatusCode(200, user);
-                }
+                var userId = _context.Users.Where(U => U.Id == id).FirstOrDefault();
+                userId.SecurityStamp = null;
+                userId.EmailConfirmed = true;
+                await _context.SaveChangesAsync();
+                return Ok("Wel done. Your account is verified");
+
+
+                //var getUserRole = _context.UserRoles.Include("User").Include("Role").SingleOrDefault(x => x.User.Email == userVM.Email);
+                //if (getUserRole == null)
+                //{
+                //    return NotFound( new { msg = "Please using the existing email or sign up first" });
+                //}
+                //else if (userVM.VerificationCode != getUserRole.User.SecurityStamp)
+                //{
+                //    return BadRequest(new { msg = "Incorrect code. Please try again" });
+                //}
+                //else
+                //{
+                //    var user = new UserViewModel();
+                //    user.Id = getUserRole.User.Id;
+                //    user.Username = getUserRole.User.UserName;
+                //    user.RoleName = getUserRole.Role.Name;
+                //    return StatusCode(200, user);
+                //}
             }
             return BadRequest(500);
         }
@@ -100,7 +112,8 @@ namespace LearnNetCore.Controllers
         [Route("register")]
         public IActionResult Register(RegisterViewModel registerVM)
         {
-            serviceEmail.SendEmail(registerVM.Email);
+            var theCode = randomGenerator.GenerateRandom().ToString();
+            serviceEmail.SendEmail(registerVM.Email, theCode);
             var pwHashed = BCrypt.Net.BCrypt.HashPassword(registerVM.Password, 12);
                 var user = new User
                 {
@@ -113,7 +126,7 @@ namespace LearnNetCore.Controllers
                     PhoneNumberConfirmed = false,
                     TwoFactorEnabled = false,
                     LockoutEnabled = false,
-                    SecurityStamp = randomGenerator.ToString(),
+                    SecurityStamp = theCode,
                     AccessFailedCount = 0
                 };
                 _context.Users.AddAsync(user);

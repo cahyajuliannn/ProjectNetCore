@@ -107,7 +107,7 @@ function Register() {
             data: dataRegister
         }).then((result) => {
             if (result.status == 200 || result.status == 201) {
-                toastr.success("register successfully")
+                toastr.success("Please check your email to continue your registration proccess.")
                 window.location.href = "/verify";
             } else {
                 toastr.warning(result.msg)
@@ -119,17 +119,14 @@ function Register() {
 };
 
 function Verify() {
-    //const urlParams = new URLSearchParams(window.location.search);
-    var validate = new Object();
-    validate.Email = $("#email").val();
-    validate.VerificationCode = $('#verifyId').val();
+    var validate = $('#verifyId').val();
     console.log(validate);
     $.ajax({
         type: 'POST',
-        url: "/verify/post/",
+        url: "/CreateLoginAsync/" + validate,
         cache: false,
         dataType: "JSON",
-        data: validate
+        data: { verCode : validate }
     }).then((result) => {
         if (result.status == true) {
             window.location.href = "/dashboard";

@@ -43,11 +43,12 @@ namespace WebApp.Controllers
         {
             if (userVM.VerificationCode != null)
             {
+                var id = HttpContext.Session.GetString("id");
                 var jsonUserVM = JsonConvert.SerializeObject(userVM);
                 var buffer = System.Text.Encoding.UTF8.GetBytes(jsonUserVM);
                 var byteContent = new ByteArrayContent(buffer);
                 byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                var result = client.PostAsync("account/verify/", byteContent).Result;
+                var result = client.PostAsync("account/verify/" + id, byteContent).Result;
                 if (result.IsSuccessStatusCode)
                 {
                     var data = result.Content.ReadAsStringAsync().Result;
@@ -90,10 +91,27 @@ namespace WebApp.Controllers
                 return Json(new { status = false, msg = "Oops! Something went wrong" });
             }
         }
-        public async Task<Uri> CreateLoginAsync(UserViewModel loginVM)
+        [HttpPost]
+        public IActionResult Verify(string verCode)
         {
+            var id = HttpContext.Session.GetString("id");
+            var contentData = new StringContent(verCode, System.Text.Encoding.UTF8, "application/json");
+
+            var resTask = client.PostAsync("account/Verify/" + id, contentData);
+
+            var result = resTask.Result;
+            if (result.IsSuccessStatusCode)
+            {
+                HttpContext.Session.SetString("verified", "true");
+            }
+
+            return Json(result, new Newtonsoft.Json.JsonSerializerSettings());
+        }
+        public async Task<Uri> CreateLoginAsync(UserViewModel loginVM, string verCode)
+        {
+            var id = HttpContext.Session.GetString("id");
             HttpResponseMessage response = await client.PostAsJsonAsync(
-                "account", loginVM);
+                "account/verify/" + id, loginVM);
             response.EnsureSuccessStatusCode();
 
             // return URI of the created resource.

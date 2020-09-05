@@ -13,6 +13,7 @@ C:\Users\User\source\repos\LearnNetCore\WebApp\bin\Debug\netcoreapp2.1\LearnNetC
 C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\WebApp.csprojAssemblyReference.cache
 C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\WebApp.AssemblyInfoInputs.cache
 C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\WebApp.AssemblyInfo.cs
+C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\WebApp.csproj.CoreCompileInputs.cache
 C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\WebApp.RazorAssemblyInfo.cache
 C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\WebApp.RazorAssemblyInfo.cs
 C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\WebApp.TagHelpers.input.cache
@@ -20,6 +21,9 @@ C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\WebApp.Ta
 C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\WebApp.RazorCoreGenerate.cache
 C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\Razor\Views\AccountAuth\Login.cshtml.g.cs
 C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\Razor\Views\AccountAuth\Register.cshtml.g.cs
+C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\Razor\Views\AccountAuth\Verify.cshtml.g.cs
+C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\Razor\Views\Dashboard\Dashboard.cshtml.g.cs
+C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\Razor\Views\Dashboard\Dashboard1.cshtml.g.cs
 C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\Razor\Views\Dashboard\Index.cshtml.g.cs
 C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\Razor\Views\Home\About.cshtml.g.cs
 C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\Razor\Views\Home\Contact.cshtml.g.cs
@@ -43,7 +47,3 @@ C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\WebApp.cs
 C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\WebApp.dll
 C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\WebApp.pdb
 C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\WebApp.genruntimeconfig.cache
-C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\WebApp.csproj.CoreCompileInputs.cache
-C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\Razor\Views\Dashboard\Dashboard.cshtml.g.cs
-C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\Razor\Views\Dashboard\Dashboard1.cshtml.g.cs
-C:\Users\User\source\repos\LearnNetCore\WebApp\obj\Debug\netcoreapp2.1\Razor\Views\AccountAuth\Verify.cshtml.g.cs
