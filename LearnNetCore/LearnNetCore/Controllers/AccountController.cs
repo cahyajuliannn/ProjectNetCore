@@ -41,7 +41,7 @@ namespace LearnNetCore.Controllers
             if (ModelState.IsValid)
             {
                 var pwd = userVM.Password;
-                var masuk = _context.UserRoles.Include("Role").Include("User").SingleOrDefault(m => m.User.Email == userVM.Email);
+                var masuk = _context.UserRoles.Include("Role").Include("User").FirstOrDefault(m => m.User.Email == userVM.Email);
                 if (masuk == null)
                 {
                     return BadRequest("Please use the existing email or register first");
@@ -69,21 +69,26 @@ namespace LearnNetCore.Controllers
             return BadRequest(500);
         }
         [HttpPost]
-        [Route("verify/{id}")]
-        public async Task<IActionResult> VerifyCode(string id, string verCode)
+        [Route("verify")]
+        public async Task<IActionResult> VerifyCode(User userViewModel)
         {
             if (ModelState.IsValid)
             {
-                var getCode = _context.Users.Where(U => U.SecurityStamp == verCode).Any();
+                var getCode = _context.Users.Where(U => U.SecurityStamp == userViewModel.SecurityStamp).Any();
                 if (!getCode)
                 {
                     return BadRequest(new { msg = "Verification proccess is failed. Please enter the invalid code" });
                 }
-                var userId = _context.Users.Where(U => U.Id == id).FirstOrDefault();
-                userId.SecurityStamp = null;
-                userId.EmailConfirmed = true;
+                var userEmail = _context.UserRoles.Include("Role").Include("User").Where(U => U.User.Email == userViewModel.Email).FirstOrDefault();
+                var getUser = new UserViewModel();
+                userEmail.User.SecurityStamp = null;
+                userEmail.User.EmailConfirmed = true;
+                getUser.RoleName = userEmail.Role.Name;
+                getUser.Username = userEmail.User.UserName;
+                getUser.Id = userEmail.User.Id;
+                getUser.Email = userEmail.User.Email;
                 await _context.SaveChangesAsync();
-                return Ok("Wel done. Your account is verified");
+                return StatusCode(200, getUser);
 
 
                 //var getUserRole = _context.UserRoles.Include("User").Include("Role").SingleOrDefault(x => x.User.Email == userVM.Email);
@@ -120,7 +125,7 @@ namespace LearnNetCore.Controllers
                     Email = registerVM.Email,
                     PasswordHash = pwHashed,
                     UserName = registerVM.Username,
-                    NormalizedEmail = registerVM.Email.ToUpper(),
+                    //NormalizedEmail = registerVM.Email.ToUpper(),
                     EmailConfirmed = false,
                     PhoneNumber = registerVM.Phone,
                     PhoneNumberConfirmed = false,

@@ -39,16 +39,17 @@ namespace WebApp.Controllers
             return View();
         }
         [Route("verify/post")]
-        public IActionResult VerifCode(UserViewModel userVM)
+        public IActionResult VerifCode(User userVM)
         {
-            if (userVM.VerificationCode != null)
+            var email = userVM.Email;
+            var verCode = userVM.SecurityStamp;
+            if (verCode != null)
             {
-                var id = HttpContext.Session.GetString("id");
                 var jsonUserVM = JsonConvert.SerializeObject(userVM);
                 var buffer = System.Text.Encoding.UTF8.GetBytes(jsonUserVM);
                 var byteContent = new ByteArrayContent(buffer);
                 byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                var result = client.PostAsync("account/verify/" + id, byteContent).Result;
+                var result = client.PostAsync("account/verify/" + email , byteContent).Result;
                 if (result.IsSuccessStatusCode)
                 {
                     var data = result.Content.ReadAsStringAsync().Result;
@@ -91,27 +92,103 @@ namespace WebApp.Controllers
                 return Json(new { status = false, msg = "Oops! Something went wrong" });
             }
         }
+        [Route("verif")]
         [HttpPost]
-        public IActionResult Verify(string verCode)
+        public IActionResult Verify(User model)
         {
-            var id = HttpContext.Session.GetString("id");
-            var contentData = new StringContent(verCode, System.Text.Encoding.UTF8, "application/json");
-
-            var resTask = client.PostAsync("account/Verify/" + id, contentData);
-
-            var result = resTask.Result;
-            if (result.IsSuccessStatusCode)
+            if (model.SecurityStamp != null)
             {
-                HttpContext.Session.SetString("verified", "true");
+                var jsonUserVM = JsonConvert.SerializeObject(model);
+                var buffer = System.Text.Encoding.UTF8.GetBytes(jsonUserVM);
+                var byteContent = new ByteArrayContent(buffer);
+                byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                var resTask = client.PostAsync("Account/verify/", byteContent);
+                resTask.Wait();
+                var result = resTask.Result;
+                if (result.IsSuccessStatusCode)
+                {
+                    var data = result.Content.ReadAsStringAsync().Result;
+                    if (data != "")
+                    {
+                        var json = JsonConvert.DeserializeObject(data).ToString();
+                        var account = JsonConvert.DeserializeObject<UserViewModel>(json);
+                        if (account.RoleName == "Admin" || account.RoleName == "Sales" || account.RoleName == "HR")
+                        {
+                            HttpContext.Session.SetString("id", account.Id);
+                            HttpContext.Session.SetString("uname", account.Username);
+                            HttpContext.Session.SetString("email", account.Email);
+                            HttpContext.Session.SetString("lvl", account.RoleName);
+                            if (account.RoleName == "Admin")
+                            {
+                                return Json(new { status = true, msg = "Well done. Your account has been verified", acc = "Admin" });
+                            }
+                            else if (account.RoleName == "Sales")
+                            {
+                                return Json(new { status = true, msg = "Well done. Your account has been verified", acc = "Sales" });
+                            }
+                            else
+                            {
+                                return Json(new { status = true, msg = "Well done. Your account has been verified", acc = "HR" });
+                            }
+                        }
+                        else
+                        {
+                            return Json(new { status = false, msg = "Please registration first." });
+                        }
+                    }
+                    else
+                    {
+                        return Json(new { status = false, msg = "The data must be filled" });
+                    }
+                }
+                else
+                {
+                    return Json(new { status = false, msg = "Something went wrong" });
+                }
             }
-
-            return Json(result, new Newtonsoft.Json.JsonSerializerSettings());
+            return Redirect("/verify");
         }
+
+
+            ////var email = HttpContext.Session.GetString("email");
+            //var contentData = new StringContent(emailnya, System.Text.Encoding.UTF8, "application/json");
+
+            //var resTask = client.PostAsync("account/Verify/" + verCode, contentData);
+
+            //var result = resTask.Result;
+            //if (result.IsSuccessStatusCode)
+            //{
+            //    var data = result.Content.ReadAsStringAsync().Result;
+            //    var json = JsonConvert.DeserializeObject(data).ToString();
+            //    var account = JsonConvert.DeserializeObject<UserViewModel>(json);
+            //    if (account.RoleName == "Admin" || account.RoleName == "Sales")
+            //    {
+            //        HttpContext.Session.SetString("id", account.Id);
+            //        HttpContext.Session.SetString("uname", account.Username);
+            //        HttpContext.Session.SetString("email", account.Email);
+            //        HttpContext.Session.SetString("lvl", account.RoleName);
+            //        if (account.RoleName == "Admin")
+            //        {
+            //            return Json(new { status = true, msg = "Login Successfully !", acc = "Admin" });
+            //        }
+            //        else
+            //        {
+            //            return Json(new { status = true, msg = "Login Successfully !", acc = "Sales" });
+            //        }
+            //    }
+            //    else
+            //    {
+            //        return Json(new { status = false, msg = "Username" });
+            //    }
+            //}
+
+            //return Json(result, new Newtonsoft.Json.JsonSerializerSettings());
+        
         public async Task<Uri> CreateLoginAsync(UserViewModel loginVM, string verCode)
         {
-            var id = HttpContext.Session.GetString("id");
+            //var id = HttpContext.Session.GetString("id");
             HttpResponseMessage response = await client.PostAsJsonAsync(
-                "account/verify/" + id, loginVM);
+                "account/verify/" + verCode, loginVM);
             response.EnsureSuccessStatusCode();
 
             // return URI of the created resource.
@@ -136,7 +213,7 @@ namespace WebApp.Controllers
                     return Json(new { status = false, msg = "Something went wrong" });
                 }
             }
-            return Redirect("/dashboard");
+            return Redirect("/register");
         }
         [Route("validate")]
         public IActionResult Validate(UserViewModel userVM)
@@ -157,7 +234,7 @@ namespace WebApp.Controllers
                     {
                         var json = JsonConvert.DeserializeObject(data).ToString();
                         var account = JsonConvert.DeserializeObject<UserViewModel>(json);
-                        if (account.RoleName == "Admin" || account.RoleName == "Sales")
+                        if (account.RoleName == "Admin" || account.RoleName == "Sales" || account.RoleName == "HR")
                         {
                             HttpContext.Session.SetString("id", account.Id);
                             HttpContext.Session.SetString("uname", account.Username);
@@ -167,24 +244,28 @@ namespace WebApp.Controllers
                             {
                                 return Json(new { status = true, msg = "Login Successfully !", acc = "Admin" });
                             }
-                            else
+                            else if (account.RoleName=="Sales")
                             {
                                 return Json(new { status = true, msg = "Login Successfully !", acc = "Sales" });
+                            }
+                            else
+                            {
+                                return Json(new { status = true, msg = "Login Successfully !", acc = "HR" });
                             }
                         }
                         else
                         {
-                            return Json(new { status = false, msg = "Username" });
+                            return Json(new { status = false, msg = "Please registration first." });
                         }
                     }
                     else
                     {
-                        return Json(new { status = false, msg = "Username" });
+                        return Json(new { status = false, msg = "The data must be filled" });
                     }
                 }
                 else
                 {
-                    return Json(new { status = false, msg = "Username" });
+                    return Json(new { status = false, msg = "Something went wrong" });
                 }
             }
             return Redirect("/login");

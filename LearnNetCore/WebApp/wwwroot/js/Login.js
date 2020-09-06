@@ -82,7 +82,7 @@ function myLogin() {
         if (result.status == 200 || result.status==201) {
 			window.location.href = "/dashboard";
 		} else {
-			toastr.warning("Incorrect password or " + result.msg)
+			toastr.warning(result.msg)
 		}
 	})
 };
@@ -106,12 +106,13 @@ function Register() {
             dataType: "JSON",
             data: dataRegister
         }).then((result) => {
-            if (result.status == 200 || result.status == 201) {
+            if (result.status == true) {
                 toastr.success("Please check your email to continue your registration proccess.")
                 window.location.href = "/verify";
             } else {
                 toastr.warning(result.msg)
             }
+            console.log(result);
         })
     } else {
         //toastr.warning(result.msg)
@@ -119,19 +120,24 @@ function Register() {
 };
 
 function Verify() {
-    var validate = $('#verifyId').val();
+    var validate = {
+        SecurityStamp : $('#verifyId').val(),
+        Email: $('#email').val()
+    };
     console.log(validate);
     $.ajax({
         type: 'POST',
-        url: "/CreateLoginAsync/" + validate,
+        url: "/verif/",
         cache: false,
         dataType: "JSON",
-        data: { verCode : validate }
+        data: validate
     }).then((result) => {
+        //window.location.href = "/dashboard";
         if (result.status == true) {
             window.location.href = "/dashboard";
         } else {
             toastr.warning(result.msg)
         }
+        console.log(result);
     });
 }
