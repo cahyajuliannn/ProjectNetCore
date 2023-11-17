@@ -10,14 +10,14 @@ typeof define === 'function' && define.amd ? define(['require'], function(requir
 (global = global || self, global.Chart = factory(global.moment));
 }(this, (function (moment) { 'use strict';
 
-moment = moment && moment.hasOwnProperty('default') ? moment['default'] : moment;
+moment = moment?.hasOwnProperty('default') ? moment['default'] : moment;
 
 function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
 
 function getCjsExportFromNamespace (n) {
-	return n && n['default'] || n;
+	return n?.['default'] || n;
 }
 
 var colorName = {
@@ -1504,12 +1504,12 @@ function getHwb(string) {
 
 function getRgb(string) {
    var rgba = getRgba(string);
-   return rgba && rgba.slice(0, 3);
+   return rgba?.slice(0, 3);
 }
 
 function getHsl(string) {
   var hsla = getHsla(string);
-  return hsla && hsla.slice(0, 3);
+  return hsla?.slice(0, 3);
 }
 
 function getAlpha(string) {
@@ -2391,7 +2391,7 @@ var helpers = {
 	 */
 	inherits: function(extensions) {
 		var me = this;
-		var ChartElement = (extensions && extensions.hasOwnProperty('constructor')) ? extensions.constructor : function() {
+		var ChartElement = (extensions?.hasOwnProperty('constructor')) ? extensions.constructor : function() {
 			return me.apply(this, arguments);
 		};
 
@@ -3929,7 +3929,7 @@ helpers$1.extend(DatasetController.prototype, {
 	 */
 	_resolveDataElementOptions: function(element, index) {
 		var me = this;
-		var custom = element && element.custom;
+		var custom = element?.custom;
 		var cached = me._cachedDataOpts;
 		if (cached && !custom) {
 			return cached;
@@ -5785,7 +5785,7 @@ core_defaults._set('line', {
 });
 
 function scaleClip(scale, halfBorderWidth) {
-	var tickOpts = scale && scale.options.ticks || {};
+	var tickOpts = scale?.options.ticks || {};
 	var reverse = tickOpts.reverse;
 	var min = tickOpts.min === undefined ? halfBorderWidth : 0;
 	var max = tickOpts.max === undefined ? halfBorderWidth : 0;
@@ -7377,12 +7377,12 @@ var core_layouts = {
 
 var platform_basic = {
 	acquireContext: function(item) {
-		if (item && item.canvas) {
+		if (item?.canvas) {
 			// Support for any object associated to a canvas (including a context2d)
 			item = item.canvas;
 		}
 
-		return item && item.getContext('2d') || null;
+		return item?.getContext('2d') || null;
 	}
 };
 
@@ -7430,7 +7430,7 @@ var EVENT_TYPES = {
  */
 function readUsedSize(element, property) {
 	var value = helpers$1.getStyle(element, property);
-	var matches = value && value.match(/^(\d+)(\.\d+)?px$/);
+	var matches = value?.match(/^(\d+)(\.\d+)?px$/);
 	return matches ? Number(matches[1]) : undefined;
 }
 
@@ -7677,7 +7677,7 @@ function removeResizeListener(node) {
 	delete expando.resizer;
 	unwatchForRender(node);
 
-	if (resizer && resizer.parentNode) {
+	if (resizer?.parentNode) {
 		resizer.parentNode.removeChild(resizer);
 	}
 }
@@ -7741,7 +7741,7 @@ var platform_dom$2 = {
 			item = item[0];
 		}
 
-		if (item && item.canvas) {
+		if (item?.canvas) {
 			// Support for any object associated to a canvas (including a context2d)
 			item = item.canvas;
 		}
@@ -7749,7 +7749,7 @@ var platform_dom$2 = {
 		// To prevent canvas fingerprinting, some add-ons undefine the getContext
 		// method, for example: https://github.com/kkapsner/CanvasBlocker
 		// https://github.com/chartjs/Chart.js/issues/2807
-		var context = item && item.getContext && item.getContext('2d');
+		var context = item?.getContext && item.getContext('2d');
 
 		// `instanceof HTMLCanvasElement/CanvasRenderingContext2D` fails when the item is
 		// inside an iframe or when running in a protected environment. We could guess the
@@ -8034,8 +8034,8 @@ var core_plugins = {
 
 		var plugins = [];
 		var descriptors = [];
-		var config = (chart && chart.config) || {};
-		var options = (config.options && config.options.plugins) || {};
+		var config = (chart?.config) || {};
+		var options = (config.options?.plugins) || {};
 
 		this._plugins.concat(config.plugins || []).forEach(function(plugin) {
 			var idx = plugins.indexOf(plugin);
@@ -8232,7 +8232,7 @@ var positioners = {
 
 		for (i = 0, len = elements.length; i < len; ++i) {
 			var el = elements[i];
-			if (el && el.hasValue()) {
+			if (el?.hasValue()) {
 				var pos = el.tooltipPosition();
 				x += pos.x;
 				y += pos.y;
@@ -8261,7 +8261,7 @@ var positioners = {
 
 		for (i = 0, len = elements.length; i < len; ++i) {
 			var el = elements[i];
-			if (el && el.hasValue()) {
+			if (el?.hasValue()) {
 				var center = el.getCenterPoint();
 				var d = helpers$1.distanceBetweenPoints(eventPosition, center);
 
@@ -9305,9 +9305,9 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 		config = initConfig(config);
 
 		var context = platform.acquireContext(item, config);
-		var canvas = context && context.canvas;
-		var height = canvas && canvas.height;
-		var width = canvas && canvas.width;
+		var canvas = context?.canvas;
+		var height = canvas?.height;
+		var width = canvas?.width;
 
 		me.id = helpers$1.uid();
 		me.ctx = context;
@@ -9633,7 +9633,7 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 		me.updateLayout();
 
 		// Can only reset the new controllers after the scales have been updated
-		if (me.options.animation && me.options.animation.duration) {
+		if (me.options.animation?.duration) {
 			helpers$1.each(newControllers, function(controller) {
 				controller.reset();
 			});
@@ -9757,7 +9757,7 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 		}
 
 		var animationOptions = me.options.animation;
-		var duration = valueOrDefault$9(config.duration, animationOptions && animationOptions.duration);
+		var duration = valueOrDefault$9(config.duration, animationOptions?.duration);
 		var lazy = config.lazy;
 
 		if (core_plugins.notify(me, 'beforeRender') === false) {
@@ -9766,7 +9766,7 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 
 		var onComplete = function(animation) {
 			core_plugins.notify(me, 'afterRender');
-			helpers$1.callback(animationOptions && animationOptions.onComplete, [animation], me);
+			helpers$1.callback(animationOptions?.onComplete, [animation], me);
 		};
 
 		if (animationOptions && duration) {
@@ -10026,7 +10026,7 @@ helpers$1.extend(Chart.prototype, /** @lends Chart */ {
 	destroyDatasetMeta: function(datasetIndex) {
 		var id = this.id;
 		var dataset = this.data.datasets[datasetIndex];
-		var meta = dataset._meta && dataset._meta[id];
+		var meta = dataset._meta?.[id];
 
 		if (meta) {
 			meta.controller.destroy();
@@ -12476,8 +12476,8 @@ var Scale = core_element.extend({
 	_layers: function() {
 		var me = this;
 		var opts = me.options;
-		var tz = opts.ticks && opts.ticks.z || 0;
-		var gz = opts.gridLines && opts.gridLines.z || 0;
+		var tz = opts.ticks?.z || 0;
+		var gz = opts.gridLines?.z || 0;
 
 		if (!me._isVisible() || tz === gz || me.draw !== me._draw) {
 			// backward compatibility: draw has been overridden by custom scale
@@ -15069,7 +15069,7 @@ var plugin_filler = {
 			el = meta.dataset;
 			source = null;
 
-			if (el && el._model && el instanceof elements.Line) {
+			if (el?._model && el instanceof elements.Line) {
 				source = {
 					visible: chart.isDatasetVisible(i),
 					fill: decodeFill(el, i, count),
@@ -15167,7 +15167,7 @@ core_defaults._set('global', {
 			generateLabels: function(chart) {
 				var datasets = chart.data.datasets;
 				var options = chart.options.legend || {};
-				var usePointStyle = options.labels && options.labels.usePointStyle;
+				var usePointStyle = options.labels?.usePointStyle;
 
 				return chart._getSortedDatasetMetas().map(function(meta) {
 					var style = meta.controller.getStyle(usePointStyle ? 0 : undefined);
@@ -15511,7 +15511,7 @@ var Legend = core_element.extend({
 				ctx.setLineDash(valueOrDefault$e(legendItem.lineDash, lineDefault.borderDash));
 			}
 
-			if (labelOpts && labelOpts.usePointStyle) {
+			if (labelOpts?.usePointStyle) {
 				// Recalculate x and y for drawPoint() because its expecting
 				// x and y to be center of figure (instead of top left)
 				var radius = boxWidth * Math.SQRT2 / 2;
